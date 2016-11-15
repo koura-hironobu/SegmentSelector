@@ -1,0 +1,6 @@
+{
+  "autoload": {
+    "psr-0": { "SegmentSelector": "lib/" }
+  },
+  "require-dev": { "phpunit/phpunit": "5.5.*" }
+}
