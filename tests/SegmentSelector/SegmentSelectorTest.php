@@ -63,6 +63,24 @@ class SegmentSelectorTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testDumpJSON() {
+        $text = "1.1.1.0/24\n\n\r\n2.2.0.0-2.2.1.0\n\r\n\r\n\r\n\n\n3.0.0.0/8";
+
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource($text);
+
+        $json_str = '{"entries":[{"range":["1.1.1.0","2.1.0.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.0.0.255"],"source":"3.0.0.0\/8","action":null}]}';
+        $this->assertEquals($selector->dumpJSON(), $json_str);
+    }
+
+    public function testLoadJSON() {
+        $json_str = '{"entries":[{"range":["1.1.1.0","2.1.0.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.0.0.255"],"source":"3.0.0.0\/8","action":null}]}';
+
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->loadJSON($json_str);
+
+        $this->assertEquals($selector->dumpJSON(), $json_str);
+    }
 }
 
 
