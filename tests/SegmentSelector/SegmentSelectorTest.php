@@ -81,6 +81,15 @@ class SegmentSelectorTest extends TestCase
 
         $this->assertEquals($selector->dumpJSON(), $json_str);
     }
+
+    public function testComment() {
+        $text = "1.1.1.0/24 #hogehoge\n\n\r\n2.2.0.0-2.2.1.0\n\r\n\r\n# aaa\r\n\n\n3.0.0.0/8";
+
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource($text);
+
+        $this->assertEquals(count($selector->entries()), 3);
+    }
 }
 
 

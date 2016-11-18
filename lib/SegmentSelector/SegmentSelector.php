@@ -12,6 +12,9 @@ class Entry
         $a = 0;
         $b = 0;
 
+        $this->_source = $source;
+        $source = preg_replace("/#.*$/", "", $source);
+            
         if (strpos($source, '-') !== false) {
             list($a, $b) = preg_split('/-/', $source);
             $a = ip2long($a);
@@ -22,8 +25,9 @@ class Entry
             $b = $a + ((1 << $q) - 1);
         }
 
-        $this->_range = array($a, $b);
-        $this->_source = $source;
+        if ($a !== 0 && $b !== 0) {
+            $this->_range = array($a, $b);
+        }
     }
 
     public function matched($ipaddr) {
@@ -44,9 +48,16 @@ class SegmentSelector
     private $_entries = array();
 
     public function initWithSource($source) {
+        $this->_source = $source;
+
         $lines = preg_split('/$\R*^/m', str_replace("\r", "\n", $source));
 
         foreach ($lines as $l) {
+            $l = preg_replace("/#.*$/", "", $l);
+            if (trim($l) === '') {
+                continue;
+            }
+
             $entry = new Entry();
             $entry->initWithSource($l);
 
@@ -62,7 +73,7 @@ class SegmentSelector
             $e = new Entry();
             $e->initWithSource($o->source);
 
-            $this->_entries [] = $e;
+            $this->_entries []= $e;
         }
     }
 
