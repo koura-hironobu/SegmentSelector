@@ -69,12 +69,12 @@ class SegmentSelectorTest extends TestCase
         $selector = new SegmentSelector\SegmentSelector();
         $selector->initWithSource($text);
 
-        $json_str = '{"entries":[{"range":["1.1.1.0","2.1.0.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.0.0.255"],"source":"3.0.0.0\/8","action":null}]}';
+        $json_str = '{"entries":[{"range":["1.1.1.0","1.1.1.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.255.255.255"],"source":"3.0.0.0\/8","action":null}]}';
         $this->assertEquals($selector->dumpJSON(), $json_str);
     }
 
     public function testLoadJSON() {
-        $json_str = '{"entries":[{"range":["1.1.1.0","2.1.0.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.0.0.255"],"source":"3.0.0.0\/8","action":null}]}';
+        $json_str = '{"entries":[{"range":["1.1.1.0","1.1.1.255"],"source":"1.1.1.0\/24","action":null},{"range":["2.2.0.0","2.2.1.0"],"source":"2.2.0.0-2.2.1.0","action":null},{"range":["3.0.0.0","3.255.255.255"],"source":"3.0.0.0\/8","action":null}]}';
 
         $selector = new SegmentSelector\SegmentSelector();
         $selector->loadJSON($json_str);
@@ -91,28 +91,28 @@ class SegmentSelectorTest extends TestCase
         $this->assertEquals(count($selector->entries()), 3);
     }
 
-    public function testX1() {
+    public function testSingleAddressAndMatched() {
         $selector = new SegmentSelector\SegmentSelector();
-        $selector->initWithSource("111.101.189.150-111.101.189.150");
+        $selector->initWithSource("11.22.33.44-11.22.33.44");
 
-        $this->assertNotNull($selector->evaluate("111.101.189.150"));
+        $this->assertNotNull($selector->evaluate("11.22.33.44"));
 
         $selector = new SegmentSelector\SegmentSelector();
-        $selector->initWithSource("111.101.189.150/32");
+        $selector->initWithSource("11.22.33.44/32");
 
-        $this->assertNotNull($selector->evaluate("111.101.189.150"));
+        $this->assertNotNull($selector->evaluate("11.22.33.44"));
     }
 
-    public function testX2() {
+    public function testSingleAddressAndNotMatched() {
         $selector = new SegmentSelector\SegmentSelector();
-        $selector->initWithSource("111.101.189.151-111.101.189.151");
+        $selector->initWithSource("11.22.33.44-11.22.33.44");
 
-        $this->assertNull($selector->evaluate("111.101.189.150"));
+        $this->assertNull($selector->evaluate("11.22.33.55"));
 
         $selector = new SegmentSelector\SegmentSelector();
-        $selector->initWithSource("111.101.189.151/32");
+        $selector->initWithSource("11.22.33.44/32");
 
-        $this->assertNull($selector->evaluate("111.101.189.150"));
+        $this->assertNull($selector->evaluate("11.22.33.55"));
     }
 }
 

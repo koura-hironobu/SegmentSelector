@@ -22,7 +22,12 @@ class Entry
         } else if (strpos($source, '/') !== false) {
             list($p, $q) = preg_split('#/#', $source);
             $a = ip2long($p);
-            $b = $a + ((1 << $q) - 1);
+            if ($a !== 0) {
+                $b = $a + ((1 << (32 - $q)) - 1);
+            }
+        } else {
+            $a = ip2long($source);
+            $b = $a;
         }
 
         if ($a !== 0 && $b !== 0) {
