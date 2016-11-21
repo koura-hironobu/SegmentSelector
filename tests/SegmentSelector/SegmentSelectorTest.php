@@ -90,6 +90,30 @@ class SegmentSelectorTest extends TestCase
 
         $this->assertEquals(count($selector->entries()), 3);
     }
+
+    public function testX1() {
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource("111.101.189.150-111.101.189.150");
+
+        $this->assertNotNull($selector->evaluate("111.101.189.150"));
+
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource("111.101.189.150/32");
+
+        $this->assertNotNull($selector->evaluate("111.101.189.150"));
+    }
+
+    public function testX2() {
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource("111.101.189.151-111.101.189.151");
+
+        $this->assertNull($selector->evaluate("111.101.189.150"));
+
+        $selector = new SegmentSelector\SegmentSelector();
+        $selector->initWithSource("111.101.189.151/32");
+
+        $this->assertNull($selector->evaluate("111.101.189.150"));
+    }
 }
 
 
